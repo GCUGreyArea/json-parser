@@ -1,0 +1,8 @@
+*.o
+build
+*.so
+*.a
+*.lex.c
+*.tab.c
+*.tab.h
+out.txt
