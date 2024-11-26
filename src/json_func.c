@@ -52,19 +52,19 @@ struct json_token *get_next_token(struct json_token_list *list)
 {
     if (list->idx >= list->size)
     {
-        struct json_token *new_list = (struct json_token *) malloc(sizeof(struct json_token) * (list->size * 2));
+        struct json_token *new_list = (struct json_token *) realloc(list->list, sizeof(struct json_token) * (list->size * 2));
         if (new_list == NULL)
         {
             printf("Memory allocation failure in get_next_token\n");
             abort();
         }
 
-        // printf("Ralocating: %d\n", list->idx * 2);
-        for(unsigned int i=0; i<list->size; i++) {
-            new_list[i] = list->list[i];
-        }
+        // // printf("Ralocating: %d\n", list->idx * 2);
+        // for(unsigned int i=0; i<list->size; i++) {
+        //     new_list[i] = list->list[i];
+        // }
         
-        free(list->list);
+        // free(list->list);
         list->list = new_list;
         list->size = (list->size * 2);
     }
@@ -334,17 +334,13 @@ void push(struct stack *s, void * i)
     {
         if (s->idx == s->size)
         {
-            struct container *new_s = malloc(sizeof(struct container) * s->size * 2);
+            struct container *new_s = realloc(s->ar, sizeof(struct container) * s->size * 2);
             if (new_s == NULL)
             {
                 printf("memory allocation failure in push(struct stack * s, unsigned long long int i)\n");
                 abort();
             }
-            printf("Realocated stack: %d\n",s->size * 2);
-            for(unsigned int i=0; i<s->size; i++) {
-                new_s[i] = s->ar[i];
-            }
-            free(s->ar);
+            
             s->ar = new_s;
             s->size = s->size * 2;
         }
@@ -408,7 +404,7 @@ inline static bool render(struct json_token *list, hashMap_t *hash_map, unsigned
         case JSON_STRING:
             break;
         case JSON_LIST:
-            render(list, hash_map, &i, string);`
+            render(list, hash_map, &i, string);
             break;
         case JSON_OBJECT:
             render(list, hash_map, &i, string);
