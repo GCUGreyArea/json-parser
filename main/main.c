@@ -59,6 +59,7 @@ void main(int argc, char** argv) {
             parse_string_bison(string);
             printf("parsed string\n");
             iterate_list(list,string);
+            printf("Done...\n");
             delete_list(list);
 
             free(string);        
