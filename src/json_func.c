@@ -58,13 +58,7 @@ struct json_token *get_next_token(struct json_token_list *list)
             printf("Memory allocation failure in get_next_token\n");
             abort();
         }
-
-        // // printf("Ralocating: %d\n", list->idx * 2);
-        // for(unsigned int i=0; i<list->size; i++) {
-        //     new_list[i] = list->list[i];
-        // }
         
-        // free(list->list);
         list->list = new_list;
         list->size = (list->size * 2);
     }
