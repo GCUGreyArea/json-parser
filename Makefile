@@ -18,14 +18,22 @@ TARGET  = lib$(NAME).so
 TEST	= test_$(NAME)
 BENCH   = benchmark_$(NAME)
 
-# Yacc file go first because they generat headers
+# Yacc file go first because they generat headers and 
+# this insures they get generated properly
 YACSRC = $(patsubst %.y,%.tab.c,$(wildcard src/*.y))
 LEXSRC = $(patsubst %.l,%.lex.c,$(wildcard src/*.l))
 CXXSRC = $(wildcard src/*.cpp)
 CSRC   = $(wildcard src/*.c)
 
-OBJ := $(patsubst %.cpp,build/%.o,$(CXXSRC))
+# YACC goes first!
+OBJ := $(patsubst %.tab.c,build/%.tab.o,$(YACSRC))
+OBJ += $(patsubst %.lex.c,build/%.lex.o,$(LEXSRC))
+OBJ += $(patsubst %.cpp,build/%.o,$(CXXSRC))
 OBJ += $(patsubst %.c,build/%.o,$(CSRC))
+
+# Deduplicate OBJ
+OBJ := $(shell echo $(OBJ) | tr ' ' '\n' | awk '!seen[$$0]++' | tr '\n' ' ')
+
 
 # Test code
 TESTCXXSRC := $(wildcard test/*.cpp)
@@ -63,22 +71,6 @@ $(TESTTARGET): build $(TESTOBJ) $(BUILDTARGET)
 
 $(BENCHTARGET): build $(BENCHOBJ)
 	$(CXX) $(CXXFLAGS) -Lbuild -Iback -Isrc -Ibenchmark $(BENCHOBJ) -ljson -lbenchmark -lpthread -o $(BENCHTARGET) -Wl,-rpath,build
-
-
-cmd_example: $(BUILDTARGET)
-	g++ -std=c++17 -Wall -Isrc -c example/cmd_example.cpp -o cmd_example.o
-	g++ -std=c++17 -Lbuild -ljsmn -o cmd_example cmd_example.o -Wl,-rpath,build
-	rm -f cmd_example.o
-
-jsondump: $(BUILDTARGET)
-	g++ -std=c++17 -g -Wall -Isrc -c example/jsondump.cpp -o jsondump.o
-	g++ -std=c++17 -g -Lbuild -ljsmn -o jsondump jsondump.o -Wl,-rpath,build
-	rm -f jsondump.o
-
-simple: $(BUILDTARGET)
-	g++ -std=c++17 -g -Wall -Isrc -c example/simple.cpp -o simple.o
-	g++ -std=c++17 -g -Lbuild -ljsmn -o simple simple.o -Wl,-rpath,build
-	rm -f simple.o
 
 main: $(BUILDTARGET)
 	gcc $(CFLAGS) -Isrc -c main/main.c  -o build/main.o
