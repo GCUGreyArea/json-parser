@@ -115,3 +115,7 @@ void parse_string_bison(const char* in) {
   }
 }
 
+void print_list(char * string) {
+    iterate_list(list,string);
+}
+

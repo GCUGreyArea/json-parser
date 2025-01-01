@@ -135,6 +135,7 @@ void delete_stack(struct stack * s);
 void parse_string_bison(const char* in);
 void init_parser(unsigned int size);
 void free_parser();
+void print_list(char * string);
 
 #ifdef __cplusplus
 }
