@@ -7,7 +7,6 @@
 #include "jsmn.h"
 #include "json_func.h"
 
-
 static char * read_file(const char * name) {
     char * buffer = NULL;
     long length;
@@ -50,34 +49,19 @@ static void BM_RunJSMNCParser(benchmark::State &state) {
 
 }
 
-extern char * string;
-extern struct json_token_list * list;
-extern struct stack * token_stack;
-extern int poped;
-extern int pushed;
-extern int depth;
-extern int count;
-
-
 static void BM_RunJSONParser(benchmark::State &state) {
 
-    string = read_file("/home/barry/workspace/json/test/resources/large-file.json");
+    char * string = read_file("/home/barry/workspace/json/test/resources/large-file.json");
     if (string == nullptr) {
         throw std::runtime_error("failed to open file");
     }
     
-    list = make_tokens(1024);
-    token_stack = make_stack(1024);
-
+    init_parser(1024);
     for (auto _ : state) {
         parse_string_bison(string);
-        reset_tokens(list);
-        reset_stack(token_stack);
     }
 
-    delete_list(list);
-    delete_stack(token_stack);
-
+    free_parser();
     free(string);
 
 }
