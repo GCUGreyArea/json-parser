@@ -8,8 +8,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "hashMap.h"
+#include <stdbool.h>
 
 /**
  * @brief Types of json itmes that are legal 
@@ -133,8 +132,6 @@ unsigned int pop(struct stack * s);
 unsigned int elelments(struct stack * s);
 void reset_stack(struct stack * s);
 void delete_stack(struct stack * s);
-hashMap_t * render_paths(struct json_token_list * tokens, char * string);
-
 void parse_string_bison(const char* in);
 void init_parser(unsigned int size);
 void free_parser();
