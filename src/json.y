@@ -4,6 +4,7 @@
 	  #include <stdlib.h>
 	  #include <string.h>
     
+    #include "json_func.h"
 	  #include "json.tab.h"
 
     extern int yylex();
@@ -12,6 +13,9 @@
     extern unsigned int pos;
     extern unsigned int line;
     extern unsigned int col;
+    extern struct json_token_list * list;
+    extern struct stack * token_stack;
+
     extern void debug_list();
 
     #define YYMAXDEPTH  100000
@@ -87,7 +91,7 @@ value_lst:
 
 int yyerror(char * er) {
     printf("Error: %s at line %d -> pos %d\n", er, line, col);
-    printf("YYINITDEPTH=%ld\n",YYINITDEPTH);
+    printf("YYINITDEPTH=%d\n",YYINITDEPTH);
     return -1;
 }
 
@@ -98,7 +102,11 @@ void end_lexical_scan(void);
 
 /* This function parses a string using yyparse. 
    Note that this is not reentrant */
-void parse_string_bison(const char* in) {
+void parse_string_bison(const char* in) { 
+
+  reset_tokens(list);
+  reset_stack(token_stack);
+
   set_input_string(in);
   int rv = yyparse();
   end_lexical_scan();

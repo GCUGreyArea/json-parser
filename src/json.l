@@ -211,3 +211,13 @@ int yywrap() {
 void debug_list() {
     iterate_list(list,string);
 }
+
+void init_parser(unsigned int size) {
+    list = make_tokens(size);
+    token_stack = make_stack(size);
+}
+
+void free_parser() {
+    delete_list(list);
+    delete_stack(token_stack);
+}
