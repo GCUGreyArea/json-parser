@@ -88,6 +88,8 @@ char * copy_token_string(struct json_token * t, char * string);
 char * get_token_type_string(enum json_type t);
 struct json_token * get_token(struct json_token_list * list, unsigned int idx);
 unsigned int get_token_list_size(struct json_token_list * list);
+void reset_tokens(struct json_token_list * list);
+
 /**
  * @brief Print an item from the list
  * 
@@ -129,8 +131,11 @@ struct stack * make_stack(unsigned int size);
 void push(struct stack * s, void * i);
 void * pop(struct stack * s);
 unsigned int elelments(struct stack * s);
-
+void reset_stack(struct stack * s);
+void delete_stack(struct stack * s);
 hashMap_t * render_paths(struct json_token_list * tokens, char * string);
+
+void parse_string_bison(const char* in);
 
 #ifdef __cplusplus
 }

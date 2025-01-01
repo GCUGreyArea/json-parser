@@ -27,7 +27,7 @@
     int pushed = 0;
 
 
-    void parse_string_bison(const char* in);
+    
     void do_object();
     void do_string();
     void do_list();
@@ -51,9 +51,9 @@
 true              { pos = count; count += strlen(yytext); do_bool(); return BOOL_TRUE;}
 false             { pos = count; count += strlen(yytext); do_bool(); return BOOL_FALSE;}
 null              { pos = count; count += strlen(yytext); do_null(); return NULL_VALUE; }
-[\t\r\n]          { count++; line++; col=0;}   /* skip whitespace which is not part of a string */
-[ ]               { count++; col++;}
-.                 { count++; col++;/* count any characters that are not counted by other rules */}
+[ \t]             { count++; }   /* skip whitespace which is not part of a string */
+[\r\n]            { count++; col=0; line++; } /* count any characters that are not counted by other rules */
+.                 { count++; col++;} /* count any characters that are not counted by other rules */
 
 %%
 

@@ -278,6 +278,12 @@ void delete_list(struct json_token_list *list)
     free(list);
 }
 
+void reset_tokens(struct json_token_list * list) {
+    if(list) {
+        list->idx = 0;
+    }
+}
+
 /**
  * @brief Stack that we can use to keep track of containing objects
  *
@@ -367,6 +373,20 @@ unsigned int elelments(struct stack *s)
 
     printf("Bad stack\n");
     abort();
+}
+
+void reset_stack(struct stack * s) {
+    if(s) {
+        s->idx=0;
+    }
+}
+
+
+void delete_stack(struct stack * s) {
+    if(s) {
+        free(s->ar);
+        free(s);
+    }
 }
 
 /**
