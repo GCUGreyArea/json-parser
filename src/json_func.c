@@ -292,7 +292,7 @@ void reset_tokens(struct json_token_list * list) {
  */
 
 struct container {
-    void * value;
+    unsigned int value;
 };
 
 struct stack
@@ -328,7 +328,7 @@ struct stack *make_stack(unsigned int size)
     return s;
 }
 
-void push(struct stack *s, void * i)
+void push(struct stack *s, unsigned int i)
 {
     if (s)
     {
@@ -349,7 +349,7 @@ void push(struct stack *s, void * i)
     }
 }
 
-void * pop(struct stack *s)
+unsigned int pop(struct stack *s)
 {
     if (s)
     {

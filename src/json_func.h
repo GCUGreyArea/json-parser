@@ -128,14 +128,16 @@ struct stack;
  */
 
 struct stack * make_stack(unsigned int size);
-void push(struct stack * s, void * i);
-void * pop(struct stack * s);
+void push(struct stack * s, unsigned int i);
+unsigned int pop(struct stack * s);
 unsigned int elelments(struct stack * s);
 void reset_stack(struct stack * s);
 void delete_stack(struct stack * s);
 hashMap_t * render_paths(struct json_token_list * tokens, char * string);
 
 void parse_string_bison(const char* in);
+void init_parser(unsigned int size);
+void free_parser();
 
 #ifdef __cplusplus
 }
