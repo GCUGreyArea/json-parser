@@ -1,7 +1,13 @@
 NAME 	 = json
 
-CFLAGS   = -std=c11 -Wall -g -fPIC -fsanitize=address
-CXXFLAGS = -std=c++17 -Wall -g -fPIC -fsanitize=address
+CFLAGS   = -std=c11 -Wall -g -fPIC
+CXXFLAGS = -std=c++17 -Wall -g -fPIC
+
+
+ifdef DEBUG
+	CFLAGS += -fsanitize=address
+	CXXFLAGS += -fsanitize=address
+endif
 
 CC=gcc
 CXX=g++
@@ -18,10 +24,7 @@ LEXSRC = $(patsubst %.l,%.lex.c,$(wildcard src/*.l))
 CXXSRC = $(wildcard src/*.cpp)
 CSRC   = $(wildcard src/*.c)
 
-# YACC goes first!
-OBJ := $(patsubst %.tab.c,build/%.tab.o,$(YACSRC))
-OBJ += $(patsubst %.lex.c,build/%.lex.o,$(LEXSRC))
-OBJ += $(patsubst %.cpp,build/%.o,$(CXXSRC))
+OBJ := $(patsubst %.cpp,build/%.o,$(CXXSRC))
 OBJ += $(patsubst %.c,build/%.o,$(CSRC))
 
 # Test code
@@ -55,11 +58,11 @@ benchmark: $(BUILDTARGET) $(BENCHTARGET)
 $(BUILDTARGET) : build $(OBJ)
 	$(CXX) $(CXXFLAGS) -fPIC -Lbuild -Isrc $(OBJ) -shared -o $(BUILDTARGET)
 
-$(TESTTARGET): build $(TESTOBJ)
-	$(CXX) $(CXXFLAGS) -Lbuild -Isrc -Itest $(TESTOBJ) -ljson -lgtest -lpthread -lglog -o $(TESTTARGET) -Wl,-rpath,build
+$(TESTTARGET): build $(TESTOBJ) $(BUILDTARGET) 
+	$(CXX) $(CXXFLAGS) -Lbuild -Isrc -Itest $(TESTOBJ) -lgtest -lpthread -lglog -ljson  -o $(TESTTARGET) -Wl,-rpath,build
 
 $(BENCHTARGET): build $(BENCHOBJ)
-	$(CXX) $(CXXFLAGS) -Lbuild -Iback -Isrc -Ibenchmark $(BENCHOBJ) -ljsmn -lbenchmark -lpthread -o $(BENCHTARGET) -Wl,-rpath,build
+	$(CXX) $(CXXFLAGS) -Lbuild -Iback -Isrc -Ibenchmark $(BENCHOBJ) -ljson -lbenchmark -lpthread -o $(BENCHTARGET) -Wl,-rpath,build
 
 
 cmd_example: $(BUILDTARGET)
