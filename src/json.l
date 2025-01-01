@@ -9,7 +9,6 @@
     #include <stdio.h>
     #include "json.tab.h"
     #include "json_func.h"
-    #include "hash.h"
 
     unsigned int count = 0;
     unsigned int line = 0;
